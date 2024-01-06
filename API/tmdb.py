@@ -27,9 +27,10 @@ page = "1"
 
 parametros = f"include_adult={include_adult}&include_video{include_video}&language={language}&page{page}"
 
-url = f"https://api.themoviedb.org/3/discover/movie?{parametros}"
+url = "https://api.themoviedb.org"
+endpoints = f"/3/discover/movie?{parametros}"
 headers = {"accept": "application/json","Authorization":Authorization}
-response = requests.get(url, headers=headers)
+response = requests.get(url+endpoints, headers=headers)
 
 
 '''
