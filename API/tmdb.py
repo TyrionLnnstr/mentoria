@@ -30,21 +30,22 @@ parametros = f"include_adult={include_adult}&include_video{include_video}&langua
 url = "https://api.themoviedb.org"
 endpoints = f"/3/discover/movie?{parametros}"
 headers = {"accept": "application/json","Authorization":Authorization}
-response = requests.get(url+endpoints, headers=headers)
 
-
-'''
-neste trecho nos colocamos no codigo qual a url no qual vamos fazer o get
-por ser uma API privada necessitamos informar o segredo dentro do cabecalho
-por seguranca foi utilizado o arquivo .env para acessar o segredo
-'''
-
-if response.status_code in range(200, 300, 1):
+try:
+    response = requests.get(url+endpoints, headers=headers)
+    response.raise_for_status()
     data = response.json()
     file = open("mentoria(eng.dados)/data/tmdb.json", "w", encoding=("utf-8")) 
-    json.dump(data, file, ensure_ascii=False, indent=2)
-else:
-    print(response.content)
+    json.dump(data, file, ensure_ascii=False, indent=2)    
+
+except  requests.exceptions.HTTPError as e:
+        print("An HTTP Error occurred: ", e)
+
+except  requests.exceptions.RequestException as e:
+        print("A Request Error occurred: ", e)
+
+except  Exception as e:
+        print("A Exception occurred: ", e)
 
 '''
 response.json acessa o get e o transforma em json
