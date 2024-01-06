@@ -38,11 +38,12 @@ por ser uma API privada necessitamos informar o segredo dentro do cabecalho
 por seguranca foi utilizado o arquivo .env para acessar o segredo
 '''
 
-
-data = response.json()
-file = open("mentoria(eng.dados)/data/tmdb.json", "w", encoding=("utf-8")) 
-json.dump(data, file, ensure_ascii=False, indent=2)
-
+if response.status_code == 200:
+    data = response.json()
+    file = open("mentoria(eng.dados)/data/tmdb.json", "w", encoding=("utf-8")) 
+    json.dump(data, file, ensure_ascii=False, indent=2)
+else:
+    print(response.content)
 
 '''
 response.json acessa o get e o transforma em json
