@@ -58,4 +58,6 @@ codificacao "utf-8"
 dump utilizamos o ensure_ascii = false 
 isso faz com que os caracteres especiais como acentos sejam exibidos no arquivo
 caso contrario teremos resultados como este fam\u00edlia  onde \u00ed representa i com acento
+---------------------------------------------------
+try e exception foi implementado para melhorar a leitura dos logs de possiveis erros na chamada da API
 '''
