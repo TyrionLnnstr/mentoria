@@ -1,6 +1,6 @@
+import  requests
 import os 
 from dotenv import load_dotenv 
-
 load_dotenv()
 Authorization = os.getenv('tmdb_Authorization', None)
 header = {"accept": "application/json","Authorization":Authorization}
@@ -13,12 +13,7 @@ class tmdbapi:
         self.include_video = 'false'
         self.language = 'pt-BR'
         self.page = 1
-
-    def get_url(self): 
-        return self.url_base
-    
-    def get_endpoints(self): 
-        return self.endpoint
+        self.query_params = ''
 
     def get_params(self):
         return {
@@ -27,15 +22,33 @@ class tmdbapi:
             'language': self.language,
             'page': self.page
         }
+    def query(self):
+        self.query_params = ''
+        self.conct_aux = 0
+        for k, v in self.get_params().items():
+            if self.conct_aux > 0:
+                self.query_params += '&'
+        self.query_params += f"{k}={v}"
+        self.conct_aux += 1
 
-instancia_base_params = tmdbapi()
-url = instancia_base_params.get_url()
-endp = instancia_base_params.get_endpoints()
-query_params_list = instancia_base_params.get_params()
-conct_aux = 0
-query_params = ""
-for k, v in query_params_list.items():
-    if conct_aux > 0:
-        query_params += '&'
-    query_params += f"{k}={v}"
-    conct_aux += 1
+    def get_api(self):
+        try:
+            self.query()
+            self.response = requests.get(self.url_base+self.endpoint+self.query_params, headers=header)
+            self.response.raise_for_status()
+            self.page += 1
+        except  requests.exceptions.HTTPError as e:
+                print("An HTTP Error occurred: ", e)
+        except  requests.exceptions.RequestException as e:
+                print("A Request Error occurred: ", e)
+        except  Exception as e:
+                print("A Exception occurred: ", e)
+    def dados(self):
+        return self.response.json()
+
+tmdb_instance = tmdbapi()
+tmdb_instance.get_api()
+dados = tmdb_instance.dados()
+
+pag_total   =   (dados['total_pages'])
+pag         =   (dados['page'])
