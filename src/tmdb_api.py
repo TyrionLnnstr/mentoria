@@ -1,12 +1,13 @@
 import  requests
-import os 
+import  os 
+import  datetime
 from dotenv import load_dotenv 
 load_dotenv()
-Authorization = os.getenv('tmdb_Authorization', None)
-header = {"accept": "application/json","Authorization":Authorization}
 
-class tmdbapi:
+class TMDB:
     def __init__(self):
+        self.Authorization = os.getenv('tmdb_Authorization', None)
+        self.header = {"accept": "application/json","Authorization":self.Authorization}
         self.url_base = 'https://api.themoviedb.org/'
         self.endpoint = '/3/discover/movie?'
         self.include_adult = 'false'
@@ -30,11 +31,14 @@ class tmdbapi:
                 self.query_params += '&'
         self.query_params += f"{k}={v}"
         self.conct_aux += 1
-
+    
+    def dt_time(self):
+        return datetime.datetime.now().strftime("%Y%m%d")
+    
     def get_api(self):
         try:
             self.query()
-            self.response = requests.get(self.url_base+self.endpoint+self.query_params, headers=header)
+            self.response = requests.get(self.url_base+self.endpoint+self.query_params, headers=self.header)
             self.response.raise_for_status()
             self.page += 1
         except  requests.exceptions.HTTPError as e:
@@ -43,12 +47,5 @@ class tmdbapi:
                 print("A Request Error occurred: ", e)
         except  Exception as e:
                 print("A Exception occurred: ", e)
-    def dados(self):
+    def data(self):
         return self.response.json()
-
-tmdb_instance = tmdbapi()
-tmdb_instance.get_api()
-dados = tmdb_instance.dados()
-
-pag_total   =   (dados['total_pages'])
-pag         =   (dados['page'])
