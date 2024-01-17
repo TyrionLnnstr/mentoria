@@ -1,5 +1,5 @@
-from extract_tmdb.src.tmdb_api import TMDB
-from extract_tmdb.src.file_handler import FileHandler
+from src.tmdb_api import TMDB
+from src.file_handler import FileHandler
 import time
 
 if  __name__ == "__main__":
