@@ -5,11 +5,17 @@ from dotenv import load_dotenv
 load_dotenv()
 
 class TMDB:
-    def __init__(self):
+    def head(self):    
         self.Authorization = os.getenv('tmdb_Authorization', None)
         self.header = {"accept": "application/json","Authorization":self.Authorization}
+
+    def url_b(self):   
         self.url_base = 'https://api.themoviedb.org/'
+
+    def endp(self):
         self.endpoint = '/3/discover/movie?'
+
+    def params(self):
         self.include_adult = 'false'
         self.include_video = 'false'
         self.language = 'pt-BR'
@@ -23,7 +29,8 @@ class TMDB:
             'language': self.language,
             'page': self.page
         }
-    def query(self):
+
+    def qry(self):
         self.query_params = ''
         self.conct_aux = 0
         for k, v in self.get_params().items():
@@ -31,10 +38,10 @@ class TMDB:
                 self.query_params += '&'
         self.query_params += f"{k}={v}"
         self.conct_aux += 1
-    
+
     def dt_time(self):
         return datetime.datetime.now().strftime("%Y%m%d")
-    
+
     def get_api(self):
         try:
             self.query()
@@ -47,5 +54,6 @@ class TMDB:
                 print("A Request Error occurred: ", e)
         except  Exception as e:
                 print("A Exception occurred: ", e)
+
     def data(self):
         return self.response.json()
